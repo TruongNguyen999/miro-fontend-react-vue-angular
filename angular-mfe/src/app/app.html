@@ -1,8 +1,6 @@
-<div class="card">
-  <h2>📩 Angular Microfrontend</h2>
-  <div class="message">
-    <strong>Message từ React:</strong>
-    <p>{{ message || 'Chưa có message nào' }}</p>
-  </div>
-  <button (click)="sendMessage()">🚀 Gửi message sang React</button>
+<div class="card-angular">
+  <h2>Angular Micro-Frontend</h2>
+  <p><b>Message từ React:</b> {{ message || "Chưa có message" }}</p>
+  <input [(ngModel)]="inputMessage" placeholder="Nhập message..." />
+  <button (click)="sendMessage()">Gửi message sang React</button>
 </div>

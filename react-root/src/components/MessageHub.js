@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import "./MessageHub.css";
 
 const MessageHub = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const messagesEndRef = useRef(null);
 
   // Lắng nghe event từ app con
   useEffect(() => {
@@ -16,6 +18,10 @@ const MessageHub = () => {
       window.removeEventListener("mfe-message", handler);
     };
   }, []);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   // Gửi message xuống app con
   const sendMessage = () => {
@@ -35,12 +41,11 @@ const MessageHub = () => {
         {messages.length === 0 ? (
           <p className="empty">No messages yet...</p>
         ) : (
-          messages.map((m, i) => (
-            <div key={i} className="message">
-              <strong>{m.sender}:</strong> {m.text}
-            </div>
+          messages.map((msg, index) => (
+            <div key={index} className="message">{msg}</div>
           ))
         )}
+        <div ref={messagesEndRef} />
       </div>
 
       <div className="input-box">

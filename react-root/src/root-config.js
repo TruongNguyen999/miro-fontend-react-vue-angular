@@ -18,7 +18,7 @@ registerApplication({
   name: "vue-mf",
   app: () => {
     // eslint-disable-next-line no-undef, no-restricted-properties
-    return System.import("http://localhost:8081/vue-mf.js");  
+    return System.import("http://localhost:8081/vue-mf.umd.js");  
   },
   activeWhen: [location => location.pathname.startsWith("/vue")],
   customProps: {
