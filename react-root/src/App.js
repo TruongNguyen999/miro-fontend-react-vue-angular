@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import ProjectContent from "./components/ProjectContent";
+import MessageHub from "./components/MessageHub";
 import "./App.css";
 
 const App = () => {
@@ -17,6 +18,9 @@ const App = () => {
               <Route path="/:project" element={<ProjectContent />} />
             </Routes>
           </div>
+
+          {/* Message Center */}
+          <MessageHub />
 
           {/* Microfrontends container */}
           <div className="mf-container">

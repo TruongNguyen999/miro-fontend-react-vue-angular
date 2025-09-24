@@ -13,22 +13,27 @@ export class App {
 
   // Handler để lắng nghe sự kiện từ React
   private handler = (event: any) => {
+    console.log('Message from React:', event.detail);
+    
     if (event.detail) {
-      this.message = event.detail;
+      this.message = event.detail.message;
     }
   };
 
   ngOnInit() {
-    window.addEventListener('react-to-angular', this.handler);
+    window.addEventListener('react-to-mf', this.handler);
   }
 
   ngOnDestroy() {
-    window.removeEventListener('react-to-angular', this.handler);
+    window.removeEventListener('react-to-mf', this.handler);
   }
 
   sendMessage() {
-    const event = new CustomEvent('angular-to-react', {
-      detail: 'Hello React 👋 từ Angular!'
+    const event = new CustomEvent('mfe-message', {
+      detail: {
+        sender: "Angular-mf",
+        message: "Xin chào từ Angular app!",
+      },
     });
     window.dispatchEvent(event);
   }

@@ -1,0 +1,72 @@
+.message-hub {
+  margin: 20px auto;
+  padding: 20px;
+  width: 500px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.message-hub h3 {
+  margin-bottom: 15px;
+  text-align: center;
+  color: #333;
+}
+
+.message-list {
+  flex: 1;
+  min-height: 150px;
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background: #fafafa;
+  margin-bottom: 15px;
+}
+
+.message {
+  padding: 6px 10px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  background: #e7f3ff;
+}
+
+.message strong {
+  color: #007bff;
+}
+
+.empty {
+  color: #aaa;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.input-box {
+  display: flex;
+  gap: 10px;
+}
+
+.input-box input {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.input-box button {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.input-box button:hover {
+  background: #0056b3;
+}

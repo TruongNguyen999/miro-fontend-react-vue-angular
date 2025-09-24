@@ -12,17 +12,16 @@ export default {
     return { messageFromReact: "" };
   },
   mounted() {
-    window.addEventListener("micro-message", (e) => {
-      if (e.detail.from === "react-root") {
-        this.messageFromReact = e.detail.message;
-      }
+    window.addEventListener("react-to-mf", (event: any) => {
+      console.log("Message from React:", event.detail);
+      this.messageFromReact = e.detail.message;
     });
   },
   methods: {
     sendMessage() {
-      const event = new CustomEvent("micro-message", {
+      const event = new CustomEvent("mfe-message", {
         detail: {
-          from: "vue-mf",
+          sender: "vue-mf",
           message: "Xin chào từ Vue app!",
         },
       });
