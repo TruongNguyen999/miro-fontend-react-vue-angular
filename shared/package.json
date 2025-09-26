@@ -1,0 +1,11 @@
+{
+  "devDependencies": {
+    "rxjs": "^7.8.2",
+    "webpack": "^5.101.3",
+    "webpack-cli": "^6.0.1"
+  },
+  "scripts": {
+    "build": "webpack",
+    "serve": "http-server dist -p 9004 --cors"
+  }
+}

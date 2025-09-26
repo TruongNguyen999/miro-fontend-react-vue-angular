@@ -1,10 +1,26 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./MessageHub.css";
 
+// eslint-disable-next-line no-undef, no-restricted-properties
+let sharedStorePromise = System.import("shared-store");
+
 const MessageHub = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    let sub;
+    sharedStorePromise.then(({ store }) => {
+      sub = store.state$.subscribe(state => {
+        setMessages(state.messages);
+      });
+    });
+
+    return () => {
+      if (sub) sub.unsubscribe();  // cleanup khi unmount
+    };
+  }, []);
 
   // Lắng nghe event từ app con
   useEffect(() => {
@@ -33,9 +49,22 @@ const MessageHub = () => {
     setInput("");
   };
 
+  console.log(messages);
+  
+
+  const handlerAddMessage = async () => {
+    const { store } = await sharedStorePromise;
+    store.setState({
+      ...store.value,
+      messages: [...store.value.messages, input]
+    });
+    setInput("");
+  };
+
   return (
     <div className="message-hub">
       <h3>Message Center</h3>
+      {/* <button onClick={() => handlerAddMessage()}>Add</button> */}
 
       <div className="message-list">
         {messages.length === 0 ? (
@@ -55,7 +84,7 @@ const MessageHub = () => {
           placeholder="Type a message..."
           onChange={(e) => setInput(e.target.value)}
         />
-        <button onClick={sendMessage}>Send to MFs</button>
+        <button onClick={handlerAddMessage}>Send to MFs</button>
       </div>
     </div>
   );

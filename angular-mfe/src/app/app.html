@@ -1,6 +1,10 @@
-<div class="card-angular">
-  <h2>Angular Micro-Frontend</h2>
-  <p><b>Message từ React:</b> {{ message || "Chưa có message" }}</p>
-  <input [(ngModel)]="inputMessage" placeholder="Nhập message..." />
-  <button (click)="sendMessage()">Gửi message sang React</button>
+<div>
+  <h2>Angular Microfrontend</h2>
+
+  <input [(ngModel)]="inputMessage" placeholder="Type message..." />
+  <button (click)="sendMessage()">Send</button>
+
+  <ul>
+    <li *ngFor="let m of messages">{{ m }}</li>
+  </ul>
 </div>

@@ -1,53 +1,66 @@
 <template>
   <div class="card">
     <h2>Vue Micro-Frontend</h2>
-    <p><b>Message từ React:</b> {{ messageFromReact || "Chưa có message" }}</p>
-    <input v-model="messageToReact" placeholder="Nhập message..." />
-    <button @click="sendMessage">Gửi message sang React</button>
+
+    <input v-model="messageToSend" placeholder="Nhập message..." />
+    <button @click="sendMessage">Thêm message</button>
+
+    <ul>
+      <li v-for="(m, i) in messages" :key="i">{{ m }}</li>
+    </ul>
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return { messageFromReact: "", messageToReact: "" };
-  },
-  mounted() {
-    window.addEventListener("react-to-mf", (event) => {
-      if(event.detail.sender !== "React") return;
-      console.log("Message from React:", event.detail);
-      this.messageFromReact = event.detail.message;
-    });
-  },
-  methods: {
-    sendMessage() {
-      if(!this.messageToReact) return;
-      const event = new CustomEvent("mfe-message", {
-        detail: {
-          sender: "vue-mf",
-          message: this.messageToReact,
-        },
-      });
-      window.dispatchEvent(event);
+<script setup>
+import { ref, onMounted, onBeforeUnmount } from "vue";
 
-      this.messageToReact = "";
-    },
-  },
+// Load shared-store từ SystemJS (dùng chung với React & Angular)
+let store;
+const messages = ref([]);
+const messageToSend = ref("");
+
+// Subcribe khi component mount
+onMounted(async () => {
+  const mod = await System.import("shared-store");
+  store = mod.store;
+
+  // sync state lần đầu
+  messages.value = store.value.messages;
+
+  // subscribe khi state thay đổi
+  store.state$.subscribe((state) => {
+    messages.value = state.messages;
+  });
+});
+
+onBeforeUnmount(() => {
+  // Vue không cần unsubscribe vì BehaviorSubject sẽ giữ, 
+  // nhưng tốt nhất cleanup nếu muốn
+  // subscription.unsubscribe();
+});
+
+const sendMessage = () => {
+  if (!messageToSend.value) return;
+  store.setState({
+    ...store.value,
+    messages: [...store.value.messages, `From Vue: ${messageToSend.value}`],
+  });
+  messageToSend.value = "";
 };
 </script>
 
 <style>
 .card {
-  max-width: 400px;
-  margin: 30px auto;
+  max-width: 420px;
+  margin: 40px auto;
   padding: 25px 30px;
   border-radius: 16px;
-  background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+  background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  text-align: center;
   font-family: 'Poppins', sans-serif;
   color: #333;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: center;
 }
 
 .card:hover {
@@ -63,17 +76,10 @@ export default {
   text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 
-.card p {
-  margin-bottom: 15px;
-  font-size: 15px;
-  color: #fff;
-  font-weight: 500;
-}
-
 .card input {
-  width: 85%;
-  padding: 8px 12px;
-  margin-bottom: 15px;
+  width: 80%;
+  padding: 10px 12px;
+  margin-bottom: 12px;
   border: 2px solid #fff;
   border-radius: 8px;
   outline: none;
@@ -82,23 +88,45 @@ export default {
 }
 
 .card input:focus {
-  border-color: #ff7e5f;
-  box-shadow: 0 0 8px rgba(255,126,95,0.5);
+  border-color: #fff;
+  box-shadow: 0 0 8px rgba(255,255,255,0.6);
 }
 
 .card button {
-  padding: 10px 18px;
-  background: #ff7e5f;
-  color: #fff;
+  padding: 10px 20px;
+  background: #fff;
+  color: #66a6ff;
   font-weight: 600;
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .card button:hover {
-  background: #feb47b;
+  background: #f0f0f0;
   transform: scale(1.05);
+}
+
+.card ul {
+  margin-top: 20px;
+  padding-left: 0;
+  list-style: none;
+  text-align: left;
+}
+
+.card ul li {
+  background: rgba(255, 255, 255, 0.85);
+  margin: 6px 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #333;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card ul li:nth-child(even) {
+  background: rgba(255, 255, 255, 0.95);
 }
 </style>
